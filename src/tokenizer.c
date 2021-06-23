@@ -6,30 +6,29 @@
 /* Return true (non-zero) if c is a whitespace characer
    ('\t' or ' ').  
    Zero terminators are not printable (therefore false) */
-int space_char(char c)
-{
+int space_char(char c) {
   return (c == '\t' || c == ' ');
 }
 
 /* Return true (non-zero) if c is a non-whitespace 
    character (not tab or space).  
    Zero terminators are not printable (therefore false) */
-int non_space_char(char c)
-{
+int non_space_char(char c) {
   return (c != '\t' && c != ' ');
 }
 
 /* Returns a pointer to the first character of the next 
    space-separated word in zero-terminated str. Return a zero pointer if 
    str does not contain any words. */
-char *word_start(char *str)
-{
+char *word_start(char *str) {
   while (*str)
     {
-      if (space_char(*str) && non_space_char(*(str+1)))
-	{
+      if (non_space_char(*str)) {
+	return str;
+      }
+      else if (space_char(*str) && non_space_char(*(str+1))) {
 	  return str+1;
-	}
+      }
       str++;
     }
   return 0;
@@ -39,18 +38,16 @@ char *word_start(char *str)
 char *word_terminator(char *word) {
   while (*str)
     {
-      if (non_space_char(*str) && (space_char(*(str+1)) || *(str+1) == 0))
-	{
+      if (non_space_char(*str) && (space_char(*(str+1)) || *(str+1) == 0)) {
 	  return str+1;
-	}
+      }
       str++;
     }
   return 0;
 }
 
 /* Counts the number of words in the string argument. */
-int count_words(char *str)
-{
+int count_words(char *str) {
   int state = END;
   int word = 0;
   while(*str)
@@ -81,19 +78,12 @@ char *copy_str(char *inStr, short len) {
 }
 
 /* Returns a freshly allocated zero-terminated vector of freshly allocated 
-
    space-separated tokens from zero-terminated str.
-
    For example, tokenize("hello world string") would result in:
-
      tokens[0] = "hello"
-
      tokens[1] = "world"
-
      tokens[2] = "string" 
-
      tokens[3] = 0
-
 */
 char **tokenize(char* str) {
   int wordCount = count_words(str);
@@ -101,11 +91,10 @@ char **tokenize(char* str) {
   if (wordCount > 0)
     {
       char **token = malloc((wordCount+1)*sizeof(char *));
-      for (int i = 0; i < wordCount; i++)
-	{
-	  *(token+i) = copy_str(p, word_terminator(p) - p);
-	  p = word_terminator(p)+1;
-	}
+      for (int i = 0; i < wordCount; i++) {
+	*(token+i) = copy_str(p, word_terminator(p) - p);
+	p = word_start(word_terminator(p));
+      }
       *(token+wordCount) = 0;
       return token;
     }
@@ -115,10 +104,9 @@ char **tokenize(char* str) {
 
 /* Prints all tokens. */
 void print_tokens(char **tokens) {
-  for (int i = 0; i < sizeof(tokens); i++)
-    {
-      printf("%d: %s\n", i, &(**(tokens+i)));
-    }
+  for (int i = 0; i < sizeof(tokens); i++) {
+    printf("%d: %s\n", i, &(**(tokens+i)));
+  }
 }
 
 /* Frees all tokens and the vector containing themx. */
