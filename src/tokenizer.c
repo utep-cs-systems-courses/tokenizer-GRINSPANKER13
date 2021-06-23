@@ -72,9 +72,12 @@ int count_words(char *str) {
 char *copy_str(char *inStr, short len) {
   if (len > 0)
     {
-      char *p = (char *)malloc(len+1);
-      strcpy(p,inStr);
-      *(p+len) = 0;
+      char *p = (char *)malloc((len+1)*sizeof(char));
+      for(int i = 0; i < len+1; i++)
+	{
+	  p[i] = inStr[i];
+	}
+      p[len] = 0;
       return p;
     }
   return 0;
@@ -90,10 +93,10 @@ char *copy_str(char *inStr, short len) {
 */
 char **tokenize(char* str) {
   int wordCount = count_words(str);
-  char *p = word_start(str);
   if (wordCount > 0)
     {
-      char **token = malloc((wordCount+1)*sizeof(char *));
+      char **token = malloc((wordCount+1)*sizeof(char *)); // Add 1 for null terminator
+      char *p = word_start(str);
       for (int i = 0; i < wordCount; i++)
 	{
 	  *(token+i) = copy_str(p, word_terminator(p) - p);
@@ -107,32 +110,26 @@ char **tokenize(char* str) {
 
 /* Prints all tokens. */
 void print_tokens(char **tokens) {
-  int i = 0;
-  while(1)
-  {
-    printf("%d: %s\n", i, &(**(tokens+i)));
-    if (*(tokens+i) == 0) {
-      break;
+  if (tokens != 0)
+    {
+      while (*tokens)
+	{
+	  printf("%s\n", *tokens);
+	  tokens++;
+	}
     }
-    i++;
-  }
 }
 
 /* Frees all tokens and the vector containing themx. */
 void free_tokens(char **tokens) {
-  int i = 0;
-  while(1)
-  {
-    char *p = *(tokens+i);
-    if (p == 0) {
-      free(p);
-      p = NULL;
-      break;
+  if (tokens != 0)
+    {
+      char **temp = tokens;
+      while(*temp)
+	{
+	  free(*temp);
+	  temp++;
+	}
+      free(tokens);
     }
-    free(p);
-    p = NULL;
-    i++;
-  }
-  free(tokens);
-  tokens = NULL;
 }
