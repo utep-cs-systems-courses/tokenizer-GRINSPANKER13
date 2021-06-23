@@ -96,13 +96,29 @@ char *copy_str(char *inStr, short len) {
 
 */
 char **tokenize(char* str) {
+  int wordCount = count_words(str);
+  char *p = str;
+  if (wordCount > 0)
+    {
+      char **token = malloc((wordCount+1)*sizeof(char *));
+      for (int i = 0; i < wordCount; i++)
+	{
+	  *(token+i) = copy_str(p, word_terminator(p) - p);
+	  p = word_terminator(p)+1;
+	}
+      *(token+wordCount) = 0;
+      return token;
+    }
   return 0;
 }
 
 
 /* Prints all tokens. */
 void print_tokens(char **tokens) {
-
+  for (int i = 0; i < sizeof(tokens); i++)
+    {
+      printf("%d: %s\n", i, &(**(tokens+i)));
+    }
 }
 
 /* Frees all tokens and the vector containing themx. */
