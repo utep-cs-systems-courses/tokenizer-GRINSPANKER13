@@ -1,3 +1,6 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "tokenizer.h"
 
 #define START 1
@@ -36,12 +39,12 @@ char *word_start(char *str) {
 
 /* Returns a pointer terminator char following *word */
 char *word_terminator(char *word) {
-  while (*str)
+  while (*word)
     {
-      if (non_space_char(*str) && (space_char(*(str+1)) || *(str+1) == 0)) {
-	  return str+1;
+      if (non_space_char(*word) && (space_char(*(word+1)) || *(word+1) == 0)) {
+	  return word+1;
       }
-      str++;
+      word++;
     }
   return 0;
 }
@@ -87,14 +90,15 @@ char *copy_str(char *inStr, short len) {
 */
 char **tokenize(char* str) {
   int wordCount = count_words(str);
-  char *p = str;
+  char *p = word_start(str);
   if (wordCount > 0)
     {
       char **token = malloc((wordCount+1)*sizeof(char *));
-      for (int i = 0; i < wordCount; i++) {
-	*(token+i) = copy_str(p, word_terminator(p) - p);
-	p = word_start(word_terminator(p));
-      }
+      for (int i = 0; i < wordCount; i++)
+	{
+	  *(token+i) = copy_str(p, word_terminator(p) - p);
+	  p = word_start(word_terminator(p));
+	}
       *(token+wordCount) = 0;
       return token;
     }
