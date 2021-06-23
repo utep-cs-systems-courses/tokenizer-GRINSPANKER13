@@ -37,6 +37,14 @@ char *word_start(char *str)
 
 /* Returns a pointer terminator char following *word */
 char *word_terminator(char *word) {
+  while (*str)
+    {
+      if (non_space_char(*str) && (space_char(*(str+1)) || *(str+1) == 0))
+	{
+	  return str+1;
+	}
+      str++;
+    }
   return 0;
 }
 
@@ -62,6 +70,13 @@ int count_words(char *str)
 /* Returns a fresly allocated new zero-terminated string 
    containing <len> chars from <inStr> */
 char *copy_str(char *inStr, short len) {
+  if (len > 0)
+    {
+      char *p = (char *)malloc(len+1);
+      strcpy(p,inStr);
+      *(p+len) = 0;
+      return p;
+    }
   return 0;
 }
 
