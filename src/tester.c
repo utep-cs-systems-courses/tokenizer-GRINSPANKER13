@@ -10,7 +10,7 @@
 */
 
 #define TEST_TOKENIZER 1
-#define TEST_HISTORY 0
+#define TEST_HISTORY 1
 
 /* MinUnit: http://www.jera.com/techinfo/jtns/jtn002.html */
  #define mu_assert(message, test) do { if (!(test)) return message; } while (0)
