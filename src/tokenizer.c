@@ -39,13 +39,15 @@ char *word_start(char *str) {
 
 /* Returns a pointer terminator char following *word */
 char *word_terminator(char *word) {
-  while (*word)
+  if ((word != NULL) && (word[0] != '\0')) {
+    while (*word)
     {
-      if (non_space_char(*word) && (space_char(*(word+1)) || *(word+1) == 0)) {
+	if (non_space_char(*word) && (space_char(*(word+1)) || *(word+1) == 0)) {
 	  return word+1;
-      }
-      word++;
+	}
+	word++;
     }
+  }
   return 0;
 }
 
